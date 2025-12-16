@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Notion Widget Clock</title>
+
+<style>
+:root{
+  --bg: #d6cbc6;               /* Widgetbox beige */
+  --fg: #ffffff;
+  --line: rgba(255,255,255,.5);
+  --radius: 28px;
+  --pad: 22px;
+  --font: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: transparent;
+  overflow: hidden;
+  font-family: var(--font);
+}
+
+.wrapper {
+  height: 100%;
+  display: flex;
+}
+
+.widget {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  padding: 14px;
+  box-sizing: border-box;
+}
+
+.panel {
+  background: var(--bg);
+  border-radius: var(--radius);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background: var(--line);
+}
+
+.time {
+  font-size: clamp(72px, 18vw, 220px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--fg);
+  line-height: 1;
+}
+
+.label-left,
+.label-right {
+  position: absolute;
+  bottom: var(--pad);
+  font-size: clamp(18px, 3vw, 40px);
+  font-weight: 700;
+  letter-spacing: .08em;
+  color: var(--fg);
+}
+
+.label-left { left: var(--pad); }
+.label-right { right: var(--pad); text-transform: uppercase; }
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+  <div class="widget">
+    <div class="panel">
+      <div class="time" id="hour">08</div>
+      <div class="label-left" id="ampm">AM</div>
+    </div>
+    <div class="panel">
+      <div class="time" id="minute">28</div>
+      <div class="label-right" id="day">TUESDAY</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const hourEl = document.getElementById("hour");
+const minuteEl = document.getElementById("minute");
+const ampmEl = document.getElementById("ampm");
+const dayEl = document.getElementById("day");
+
+const days = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
+const pad = n => String(n).padStart(2,"0");
+
+function updateClock(){
+  const d = new Date();
+  let h = d.getHours();
+  const m = d.getMinutes();
+
+  ampmEl.textContent = h < 12 ? "AM" : "PM";
+  h = h % 12 || 12;
+
+  hourEl.textContent = pad(h);
+  minuteEl.textContent = pad(m);
+  dayEl.textContent = days[d.getDay()];
+}
+
+updateClock();
+setInterval(updateClock, 1000);
+</script>
+</body>
+</html>
